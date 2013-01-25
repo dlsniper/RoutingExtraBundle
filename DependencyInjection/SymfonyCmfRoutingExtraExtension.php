@@ -105,6 +105,13 @@ class SymfonyCmfRoutingExtraExtension extends Extension
             $dynamic->addMethodCall('addRouteEnhancer', array(new Reference($this->getAlias() . '.enhancer_controller_for_templates_by_class')));
             $dynamic->addMethodCall('addRouteEnhancer', array(new Reference($this->getAlias() . '.enhancer_templates_by_class')));
         }
+
+        $bundles = $container->getParameter('kernel.bundles');
+        if ('auto' === $config['publish_workflow_listener'] && !isset($bundles['SymfonyCmfCoreBundle'])
+            || !$config['publish_workflow_listener']
+        ) {
+            $container->removeDefinition($this->getAlias() . '.publish_workflow_listener');
+        }
     }
 
     public function loadSonataAdmin($config, XmlFileLoader $loader, ContainerBuilder $container)
